@@ -1,84 +1,68 @@
 import 'package:flutter/material.dart';
+import 'column.dart';
+import 'listview.dart';
+import 'separated.dart';
 
 void main() {
-  runApp(MyClickerApp());
+  runApp(MyApp());
 }
 
-class MyClickerApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Clicker',
+      title: 'Flutter List Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ClickerScreen(),
+      home: HomeScreen(),
     );
   }
 }
 
-class ClickerScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _ClickerScreenState createState() => _ClickerScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _ClickerScreenState extends State<ClickerScreen> {
-  int _counter = 0;
-  double _sliderValue = 0.5; // Starting value for the slider
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  static List<Widget> _widgetOptions = <Widget>[
+    ColumnScreen(),
+    ListViewScreen(),
+    SeparatedScreen(),
+  ];
 
-  void _changeBackgroundColor(double value) {
+  void _onItemTapped(int index) {
     setState(() {
-      _sliderValue = value;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Кликер'),
-      ),
-      body: Container(
-        color: Color.fromRGBO(
-          (255 * _sliderValue).toInt(),
-          (255 * (1 - _sliderValue)).toInt(),
-          255,
-          1.0,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Кнопка была нажата вот столько раз:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _incrementCounter,
-                child: Text('Click me!'),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Смена цвета фона',
-              ),
-              Slider(
-                value: _sliderValue,
-                onChanged: _changeBackgroundColor,
-              ),
-            ],
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Column',
           ),
-        ),
-      )
+          BottomNavigationBarItem(
+            icon: Icon(Icons.view_list),
+            label: 'ListView',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Separated',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
