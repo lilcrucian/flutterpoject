@@ -1,68 +1,44 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'column.dart';
-import 'listview.dart';
-import 'separated.dart';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
+}
+
+class PlatformSpecificWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    String platformMessage;
+    if (kIsWeb) {
+      platformMessage = "Running on the Web";
+    } else if (Platform.isAndroid) {
+      platformMessage = "Running on Android";
+    } else if (Platform.isWindows) {
+      platformMessage = "Running on Windows";
+    } else {
+      platformMessage = "Running on an unsupported platform";
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Platform depend'),
+      ),
+      body: Center(
+        child: Text(platformMessage, style: TextStyle(fontSize: 24)),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter List Demo',
+      title: 'Platform Specific App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  static List<Widget> _widgetOptions = <Widget>[
-    ColumnScreen(),
-    ListViewScreen(),
-    SeparatedScreen(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Column',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.view_list),
-            label: 'ListView',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Separated',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
+      home: PlatformSpecificWidget(),
     );
   }
 }
