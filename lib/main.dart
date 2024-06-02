@@ -1,44 +1,104 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:go_router/go_router.dart';
+import 'screens.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class PlatformSpecificWidget extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  final GoRouter _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => HomePage(),
+      ),
+      GoRoute(
+        path: '/screen1',
+        builder: (context, state) => Screen1(),
+      ),
+      GoRoute(
+        path: '/screen2',
+        builder: (context, state) => Screen2(),
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
-    String platformMessage;
-    if (kIsWeb) {
-      platformMessage = "Running on the Web";
-    } else if (Platform.isAndroid) {
-      platformMessage = "Running on Android";
-    } else if (Platform.isWindows) {
-      platformMessage = "Running on Windows";
-    } else {
-      platformMessage = "Running on an unsupported platform";
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Platform depend'),
+    return MaterialApp.router(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      body: Center(
-        child: Text(platformMessage, style: TextStyle(fontSize: 24)),
-      ),
+      routerConfig: _router,
     );
   }
 }
 
-class MyApp extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Platform Specific App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text("HomePage"),
       ),
-      home: PlatformSpecificWidget(),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => context.go("/screen1"),
+                  child: Text("Screen 1", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, double.infinity),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => context.go("/screen2"),
+                  child: Text("Screen 2", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, double.infinity),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen3()),
+                  ),
+                  child: Text("Screen 3", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, double.infinity),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen4()),
+                  ),
+                  child: Text("Screen 4", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, double.infinity),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
